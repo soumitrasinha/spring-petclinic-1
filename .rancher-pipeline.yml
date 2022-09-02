@@ -4,7 +4,7 @@ stages:
   - publishImageConfig:
       dockerfilePath: ./Dockerfile
       buildContext: .
-      tag: petclinic-1.0
+      tag: petclinic:${CICD_EXECUTION_SEQUENCE}
       registry: 127.0.0.1:34266
   when:
     branch:
