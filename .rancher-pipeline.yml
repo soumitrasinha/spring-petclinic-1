@@ -1,2 +1,14 @@
+stages:
+- name: build
+  steps:
+  - publishImageConfig:
+      dockerfilePath: ./Dockerfile
+      buildContext: .
+      tag: petclinic-1.0
+      registry: 127.0.0.1:34266
+  when:
+    branch:
+      include:
+      - main
 timeout: 60
 notification: {}
