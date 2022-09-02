@@ -5,7 +5,7 @@ FROM maven:3.6.3-openjdk-11 as build
 # RUN groupadd --gid 1000 java \
 #   && useradd --uid 1000 --gid java --shell /bin/bash --create-home java
 # USER java
-WORKDIR /app
+#WORKDIR /app
 # TODO: ideally we're copying in xml only and installing dependencies first
 #COPY ./spring-petclinic-client/pom.xml ./spring-petclinic-client/
 #COPY pom.xml .
@@ -30,7 +30,7 @@ RUN groupadd --gid 1000 java \
   && useradd --uid 1000 --gid java --shell /bin/bash --create-home java
 USER java
 VOLUME /tmp
-WORKDIR /app
+#WORKDIR /app
 COPY --from=build --chown=java:java /spring-petclinic-1/target/petclinic.jar /app/petclinic.jar
 # To reduce Tomcat startup time we added a system property pointing to "/dev/urandom" as a source of entropy.
 CMD ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app/petclinic.jar"]
