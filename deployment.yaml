@@ -1,0 +1,36 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: petclinic-service
+spec:
+  selector:
+    app: petclinic
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: petclinic
+spec:
+  selector:
+    matchLabels:
+      app: petclinic
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: petclinic
+    spec:
+      imagePullSecrets:
+      - name: pipeline-docker-registry
+      containers:
+      - name: petclinic
+        imagePullPolicy: Always
+        image: ${CICD_IMAGE}:${CICD_EXECUTION_SEQUENCE}
+        ports:
+        - containerPort: 80
