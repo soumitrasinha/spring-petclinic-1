@@ -5,18 +5,18 @@ FROM maven:3.6.3-openjdk-11 as build
 # RUN groupadd --gid 1000 java \
 #   && useradd --uid 1000 --gid java --shell /bin/bash --create-home java
 # USER java
-#WORKDIR /app
+WORKDIR /spring-petclinic-1
 # TODO: ideally we're copying in xml only and installing dependencies first
 #COPY ./spring-petclinic-client/pom.xml ./spring-petclinic-client/
 #COPY pom.xml .
 #COPY ./spring-petclinic-server/pom.xml ./spring-petclinic-server/
 # install maven dependency packages, this takes about a minute
-RUN mvn dependency:go-offline
+RUN mvn install
 # Then we copy in all source and build
 # splitting out dependencies and source will save time in re-builds
-COPY . .
+#COPY . .
 # building should only take about 13 seconds across multiple CPU's
-RUN mvn -T 1C install
+#RUN mvn -T 1C install
 #WORKDIR /app/spring-petclinic-server
 CMD ["../mvn", "spring-boot:run"]
 
@@ -29,8 +29,8 @@ FROM openjdk:11-jre-slim as prod
 RUN groupadd --gid 1000 java \
   && useradd --uid 1000 --gid java --shell /bin/bash --create-home java
 USER java
-VOLUME /tmp
-#WORKDIR /app
-COPY --from=build --chown=java:java /spring-petclinic-1/target/petclinic.jar /app/petclinic.jar
+#VOLUME /tmp
+WORKDIR /spring-petclinic-1
+COPY --from=build --chown=java:java /spring-petclinic-1/target/petclinic.jar /spring-petclinic-1/petclinic.jar
 # To reduce Tomcat startup time we added a system property pointing to "/dev/urandom" as a source of entropy.
-CMD ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app/petclinic.jar"]
+CMD ["java","-jar","/spring-petclinic-1/target/petclinic.jar"]
