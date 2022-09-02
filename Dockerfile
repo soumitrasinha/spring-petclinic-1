@@ -5,7 +5,7 @@ FROM maven:3.6.3-openjdk-11 as build
 # RUN groupadd --gid 1000 java \
 #   && useradd --uid 1000 --gid java --shell /bin/bash --create-home java
 # USER java
-#WORKDIR /spring-petclinic-1
+WORKDIR /.
 # TODO: ideally we're copying in xml only and installing dependencies first
 #COPY ./spring-petclinic-client/pom.xml ./spring-petclinic-client/
 #COPY pom.xml .
